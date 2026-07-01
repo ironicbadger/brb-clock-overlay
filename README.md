@@ -2,6 +2,8 @@
 
 Dockerized OBS browser-source overlay for the KTZ Systems BRB scene.
 
+![KTZ BRB overlay screenshot](docs/screenshot.png)
+
 It serves a full-screen 1920x1080 BRB page with:
 
 - dark graph-paper background with orange accents

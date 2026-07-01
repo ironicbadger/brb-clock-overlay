@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KTZ Systems BRB</title>
+  <style>
+    @font-face {
+      font-family: "JetBrains Mono Overlay";
+      src: url("/fonts/JetBrainsMono-ExtraBold.ttf?v=20260701") format("truetype");
+      font-style: normal;
+      font-weight: 800;
+      font-display: block;
+    }
+
+    :root {
+      --bg: #050607;
+      --panel: rgba(7, 10, 11, 0.72);
+      --grid-minor: rgba(255, 152, 72, 0.08);
+      --grid-major: rgba(255, 152, 72, 0.16);
+      --fg: rgba(244, 255, 250, 0.96);
+      --muted: rgba(244, 255, 250, 0.66);
+      --line: rgba(255, 176, 92, 0.52);
+      --accent: #ff9d48;
+      --amber: #ffd36a;
+      --red: #ff2b2b;
+      --shadow: rgba(0, 0, 0, 0.72);
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "IBM Plex Mono", "SFMono-Regular", "Cascadia Mono", "Consolas", monospace;
+    }
+
+    .stage {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background:
+        linear-gradient(var(--grid-minor) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(var(--grid-major) 1px, transparent 1px) 0 0 / 160px 160px,
+        linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 0 0 / 160px 160px,
+        radial-gradient(circle at 50% 42%, rgba(255, 132, 48, 0.16), transparent 440px),
+        #050607;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.035) 50%, transparent 100%) 0 0 / 3px 100%,
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.32));
+      opacity: 0.5;
+      mix-blend-mode: screen;
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      pointer-events: none;
+      border: 1px solid rgba(255, 176, 92, 0.3);
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8), 0 0 36px rgba(255, 132, 48, 0.1);
+    }
+
+    .brand {
+      position: absolute;
+      top: 64px;
+      left: 78px;
+      display: grid;
+      grid-template-columns: 18px auto;
+      gap: 8px 14px;
+      align-items: center;
+      text-shadow: 0 2px 7px var(--shadow);
+      z-index: 1;
+    }
+
+    .brand-mark {
+      grid-row: 1 / span 2;
+      width: 18px;
+      height: 48px;
+      background:
+        linear-gradient(var(--accent), var(--accent)) 0 0 / 18px 4px no-repeat,
+        linear-gradient(var(--accent), var(--accent)) 0 22px / 18px 4px no-repeat,
+        linear-gradient(var(--accent), var(--accent)) 0 44px / 18px 4px no-repeat;
+      filter: drop-shadow(0 0 7px rgba(255, 132, 48, 0.58));
+    }
+
+    .brand-title {
+      font-size: 32px;
+      font-weight: 850;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .status {
+      position: absolute;
+      top: 70px;
+      right: 82px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 750;
+      text-shadow: 0 2px 7px var(--shadow);
+      z-index: 1;
+    }
+
+    .status-light {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 18px rgba(255, 211, 106, 0.8);
+    }
+
+    .hero {
+      position: absolute;
+      top: 258px;
+      left: 50%;
+      width: 1050px;
+      margin-left: -525px;
+      text-align: center;
+      text-shadow: 0 8px 28px rgba(0, 0, 0, 0.8);
+      z-index: 1;
+    }
+
+    .brb {
+      font-family: "JetBrains Mono Overlay", "JetBrains Mono", "IBM Plex Mono", monospace;
+      font-size: 230px;
+      font-weight: 800;
+      line-height: 0.82;
+      letter-spacing: 0;
+      color: var(--fg);
+      -webkit-text-stroke: 3px rgba(255, 132, 48, 0.22);
+      filter: drop-shadow(0 0 22px rgba(255, 132, 48, 0.18));
+    }
+
+    .message {
+      margin-top: 34px;
+      margin-right: auto;
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 960px;
+      min-height: 102px;
+      color: var(--muted);
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: 0;
+      transition: opacity 420ms ease, transform 420ms ease;
+    }
+
+    .message.is-changing {
+      opacity: 0.14;
+      transform: translateY(6px);
+    }
+
+    .message-source {
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .message-text {
+      margin-top: 12px;
+      color: var(--fg);
+      font-size: 32px;
+      font-weight: 850;
+      line-height: 1.18;
+      text-wrap: balance;
+    }
+
+    .message strong {
+      font-weight: 900;
+    }
+
+    .clock-card {
+      position: absolute;
+      right: 86px;
+      bottom: 72px;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px 18px;
+      width: 560px;
+      padding: 18px 22px 17px;
+      color: var(--fg);
+      text-shadow: 0 2px 5px var(--shadow);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, var(--line) 18px, transparent 18px) 0 0 / 100% 1px no-repeat,
+        linear-gradient(90deg, transparent calc(100% - 18px), var(--line) calc(100% - 18px)) 0 100% / 100% 1px no-repeat,
+        linear-gradient(180deg, var(--line) 18px, transparent 18px) 0 0 / 1px 100% no-repeat,
+        linear-gradient(180deg, transparent calc(100% - 18px), var(--line) calc(100% - 18px)) 100% 0 / 1px 100% no-repeat,
+        var(--panel);
+      box-shadow: 0 0 34px rgba(0, 0, 0, 0.42);
+      z-index: 1;
+    }
+
+    .rec {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 12px rgba(255, 43, 43, 0.95);
+      animation: pulse 1.15s steps(2, start) infinite;
+    }
+
+    .date {
+      font-size: 22px;
+      font-weight: 850;
+      line-height: 1;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .small-label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .tz {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+      text-align: right;
+    }
+
+    .time {
+      grid-column: 1 / -1;
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 0.94;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .footer {
+      position: absolute;
+      left: 82px;
+      bottom: 78px;
+      width: 620px;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      text-shadow: 0 2px 7px var(--shadow);
+      z-index: 1;
+    }
+
+    .footer span {
+      color: var(--accent);
+    }
+
+    @keyframes pulse {
+      50% {
+        opacity: 0.35;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" aria-label="KTZ Systems be right back screen">
+    <header class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-title">KTZ SYSTEMS</div>
+      <div class="brand-subtitle">HOMELAB / SERVERS / STORAGE / NETWORKS</div>
+    </header>
+
+    <div class="status">
+      <span class="status-light"></span>
+      <span>STREAM PAUSED</span>
+    </div>
+
+    <section class="hero">
+      <div class="brb">BRB</div>
+      <div class="message" id="quote" aria-live="polite">
+        <span class="message-source" id="quote-source">DIMENSIONAL ERRAND</span>
+        <span class="message-text" id="quote-text">Reality is buffering; nobody touch the knobs.</span>
+      </div>
+    </section>
+
+    <section class="footer">
+      <span>//</span> live notes, lab work, and questionable firmware decisions will resume shortly
+    </section>
+
+    <section class="clock-card" aria-label="Recording style date and time overlay">
+      <div class="rec"><span class="dot"></span><span>REC</span></div>
+      <div class="date" id="date">----</div>
+      <div class="small-label">BRB CLOCK</div>
+      <div class="tz" id="tz">LOCAL</div>
+      <div class="time" id="time">--:--:--</div>
+    </section>
+  </main>
+
+  <script>
+    const dateEl = document.getElementById("date");
+    const timeEl = document.getElementById("time");
+    const tzEl = document.getElementById("tz");
+    const quoteEl = document.getElementById("quote");
+    const quoteSourceEl = document.getElementById("quote-source");
+    const quoteTextEl = document.getElementById("quote-text");
+
+    const quotes = [
+      ["DIMENSIONAL ERRAND", "Reality is buffering; nobody touch the knobs."],
+      ["GARAGE SCIENCE", "One small portal detour, then back to the stream."],
+      ["FUTURE LOGISTICS", "Intermission paperwork has reached the correct century."],
+      ["DELIVERY ROUTE", "The package is on a very educational detour."],
+      ["GUIDE ENTRY", "Pack perspective, tea, and a sensible backup plan."],
+      ["GALACTIC FOOTNOTE", "Probability is doing paperwork in the corner."],
+      ["FARM STATUS", "The checklist has promoted itself to management."],
+      ["BARNYARD PROTOCOL", "The reboot note has started running the meeting."],
+      ["HAND CANNOT ERASE", "A quiet room, a bright screen, a signal returning."],
+      ["CITY STATIC", "The trace is still here; the broadcast comes back soon."],
+      ["CITY PLANNING", "Reticulating splines."],
+      ["MUNICIPAL OPS", "Zoning low-density coffee breaks."],
+      ["TRAFFIC DESK", "Convincing one-way streets to behave."],
+      ["UTILITY MAP", "Routing power through optimism."],
+      ["MAYORAL NOTE", "Approving one more roundabout."],
+    ];
+
+    let quoteIndex = 0;
+
+    const dateFormatter = new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+
+    const timeFormatter = new Intl.DateTimeFormat("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+      timeZoneName: "short",
+    });
+
+    function tick() {
+      const now = new Date();
+      const timeParts = timeFormatter.formatToParts(now);
+      const zone = timeParts.find((part) => part.type === "timeZoneName")?.value || "LOCAL";
+      const time = timeParts
+        .filter((part) => part.type !== "timeZoneName")
+        .map((part) => part.value)
+        .join("")
+        .trim();
+
+      dateEl.textContent = dateFormatter.format(now).toUpperCase();
+      timeEl.textContent = time;
+      tzEl.textContent = zone.toUpperCase();
+    }
+
+    function rotateQuote() {
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+      quoteEl.classList.add("is-changing");
+
+      window.setTimeout(() => {
+        const [source, text] = quotes[quoteIndex];
+        quoteSourceEl.textContent = source;
+        quoteTextEl.textContent = text;
+        quoteEl.classList.remove("is-changing");
+      }, 420);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+    setInterval(rotateQuote, 8500);
+  </script>
+</body>
+</html>

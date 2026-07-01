@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BRB Clock Overlay</title>
+  <style>
+    :root {
+      --fg: rgba(245, 255, 247, 0.96);
+      --muted: rgba(245, 255, 247, 0.72);
+      --line: rgba(245, 255, 247, 0.58);
+      --red: #ff2b2b;
+      --shadow: rgba(0, 0, 0, 0.72);
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: transparent;
+      font-family: "IBM Plex Mono", "SFMono-Regular", "Cascadia Mono", "Consolas", monospace;
+    }
+
+    body {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .overlay {
+      box-sizing: border-box;
+      display: inline-grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 14px;
+      min-width: 380px;
+      padding: 14px 18px 13px;
+      color: var(--fg);
+      text-shadow: 0 2px 5px var(--shadow);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, var(--line) 12px, transparent 12px) 0 0 / 100% 1px no-repeat,
+        linear-gradient(90deg, transparent calc(100% - 12px), var(--line) calc(100% - 12px)) 0 100% / 100% 1px no-repeat,
+        linear-gradient(180deg, var(--line) 12px, transparent 12px) 0 0 / 1px 100% no-repeat,
+        linear-gradient(180deg, transparent calc(100% - 12px), var(--line) calc(100% - 12px)) 100% 0 / 1px 100% no-repeat,
+        rgba(0, 0, 0, 0.13);
+    }
+
+    .rec {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px rgba(255, 43, 43, 0.9);
+      animation: pulse 1.15s steps(2, start) infinite;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      text-align: right;
+    }
+
+    .date {
+      font-size: 18px;
+      font-weight: 750;
+      line-height: 1;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .time {
+      grid-column: 1 / -1;
+      font-size: 34px;
+      font-weight: 850;
+      line-height: 0.95;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    @keyframes pulse {
+      50% {
+        opacity: 0.35;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="overlay" aria-label="Recording style date and time overlay">
+    <div class="rec"><span class="dot"></span><span>REC</span></div>
+    <div class="date" id="date">----</div>
+    <div class="label">BRB CLOCK</div>
+    <div class="label" id="tz">LOCAL</div>
+    <div class="time" id="time">--:--:--</div>
+  </main>
+
+  <script>
+    const dateEl = document.getElementById("date");
+    const timeEl = document.getElementById("time");
+    const tzEl = document.getElementById("tz");
+
+    const dateFormatter = new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+
+    const timeFormatter = new Intl.DateTimeFormat("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+      timeZoneName: "short",
+    });
+
+    function tick() {
+      const now = new Date();
+      const timeParts = timeFormatter.formatToParts(now);
+      const zone = timeParts.find((part) => part.type === "timeZoneName")?.value || "LOCAL";
+      const time = timeParts
+        .filter((part) => part.type !== "timeZoneName")
+        .map((part) => part.value)
+        .join("")
+        .trim();
+
+      dateEl.textContent = dateFormatter.format(now).toUpperCase();
+      timeEl.textContent = time;
+      tzEl.textContent = zone.toUpperCase();
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
